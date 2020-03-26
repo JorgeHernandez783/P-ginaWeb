@@ -1,0 +1,31 @@
+<?php 
+  header('Access-Control-Allow-Origin: *'); 
+  header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+  
+  $json = file_get_contents('php://input');
+ 
+  $params = json_decode($json);
+  
+  require("conexion.php");
+
+  $conexion = conexion();
+  
+
+  mysqli_query($conexion, "UPDATE usuarios
+    SET nombre='$params->nombre',
+      telefono=$params->telefono,
+      email='$params->email'
+    WHERE idUsuario=$params->idUsuario");
+    
+  
+  class Result {}
+
+
+  $response = new Result();
+  $response->resultado = 'OK';
+  $response->mensaje = 'El usuario se actualizo exitosamente';
+
+  header('Content-Type: application/json');
+
+  echo json_encode($response);
+?>
